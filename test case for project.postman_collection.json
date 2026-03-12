@@ -1,0 +1,347 @@
+{
+  "info": {
+    "_postman_id": "8bc767ec-7798-4cb5-9d1f-32c193e95948",
+    "name": "test case for project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52727633",
+    "_collection_link": "https://go.postman.co/collection/52727633-8bc767ec-7798-4cb5-9d1f-32c193e95948?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Status code validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", function(){\r",
+              "\tpm.response.to.have.status(200);\r",
+              "    pm.expect(pm.response.code).to.eql(200);\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Response JSON validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response =pm.response.json();\r",
+              "    console.log(response);\r",
+              "\r",
+              "pm.test(\"Response body is JSON\",function(){\r",
+              "    pm.response.to.be.json;\r",
+              "    });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Response time check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let response;\r",
+              "pm.test(\"Response time is less than 1000ms\"),function(){\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+              "}\r",
+              " "
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Required fields validation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let response;\r",
+              "response = pm.response.json();\r",
+              "pm.test(\"Required fields validation\",function(){\r",
+              "    const schema= {\r",
+              "        type:'object',\r",
+              "        properties:{\r",
+              "            page :{ type:'number' },\r",
+              "            per_page :{  type:'number'},\r",
+              "            total :{ type : 'number' },\r",
+              "            total_pages : {  type : 'number' },\r",
+              "            data :{\r",
+              "                type:'array',\r",
+              "                items : {\r",
+              "                    type :'object',\r",
+              "                    properties : {\r",
+              "                        id :{type : 'integer'},\r",
+              "                        email:{type : 'string'},\r",
+              "                        first_name : {type : 'string'},\r",
+              "                        last_name :{type : 'string'},\r",
+              "                        avatar : {type : 'string'}\r",
+              "                      },\r",
+              "                    required: ['id','email','first_name','last_name','avatar']\r",
+              "\r",
+              "                }\r",
+              "\r",
+              "            }\r",
+              "\r",
+              "            },\r",
+              "        required :['page','per_page','total','total_pages','data']\r",
+              "            \r",
+              "        \r",
+              "\r",
+              "    };\r",
+              "    pm.response.to.have.jsonSchema(schema)\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Loop through users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Response to check undefined\",function(){\r",
+              "    let response = pm.response.json();\r",
+              "    for(let i =0 ; i < response.data.length; i++){\r",
+              "        pm.expect(response.data[i]).to.not.be.undefined;\r",
+              "    }\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Check specific user exists",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\" Emma exists\",function(){\r",
+              "    let response = pm.response.json();\r",
+              "    let found = false;\r",
+              "    for(i=0; i< response.data.length ;i++){\r",
+              "        if(response.data[i].first_name===\"Emma\"){\r",
+              "            found=true\r",
+              "        }\r",
+              "\r",
+              "    }\r",
+              "    pm.expect(found).to.be.true;\r",
+              "\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Validate email format",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Email format validation\",function(){\r",
+              "    let response = pm.response.json();\r",
+              "    for(let i =0 ; i < response.data.length ; i++){\r",
+              "        pm.expect(response.data[i].email).to.match(/^[@][1]$/);\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "{{vault:authorization-secret}}",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    }
+  ]
+}
